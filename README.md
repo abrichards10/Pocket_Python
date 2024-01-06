@@ -1,16 +1,16 @@
-# test_project
+# Pocket_Python
 
-A new Flutter project.
+An app that helps you solve small python problems quickly and easily! Need a python refresher? Just pull out Pocket_Python :D
 
-## Getting Started
+## How it Works
 
-This project is a starting point for a Flutter application.
+- Click on the level of coding you're comfortable with
+- Answer straightforward Python questions that keep track of your progress
+- Level up until you reach LEGEND status >:\)
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Levels that range from Beginner to Expert
+- An Account Feature to store your data
+- A button that allows tyou to continue right back to your previous lesson
+- Most importantly, Confetti!
