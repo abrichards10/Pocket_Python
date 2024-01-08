@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_project/commons/constants.dart';
 
 class Legend extends StatefulWidget {
   const Legend({super.key});
@@ -9,9 +10,6 @@ class Legend extends StatefulWidget {
 }
 
 class LegendState extends State<Legend> {
-  final mainFont = GoogleFonts.comicNeue();
-  final mainColor = const Color.fromARGB(255, 252, 221, 253);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +22,10 @@ class LegendState extends State<Legend> {
         ),
         title: Text(
           "Intermediate",
-          style: GoogleFonts.comicNeue(
-              textStyle: const TextStyle(fontWeight: FontWeight.w600)),
+          style: TextStyle(
+            fontFamily: mainFont.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         backgroundColor: mainColor,
       ),

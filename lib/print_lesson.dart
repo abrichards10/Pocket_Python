@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:test_project/commons/constants.dart';
 
 class PrintLesson extends StatefulWidget {
   const PrintLesson({super.key});
@@ -9,14 +9,8 @@ class PrintLesson extends StatefulWidget {
 }
 
 class PrintLessonState extends State<PrintLesson> {
-  var mainFont = GoogleFonts.comicNeue();
-
-  // NEXT LESSON
-  // Progress
-
   @override
   Widget build(BuildContext context) {
-    const mainColor = Color.fromARGB(255, 252, 221, 253);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
@@ -34,8 +28,10 @@ class PrintLessonState extends State<PrintLesson> {
         ],
         title: Text(
           "Print",
-          style: GoogleFonts.comicNeue(
-              textStyle: TextStyle(fontWeight: FontWeight.w600)),
+          style: TextStyle(
+            fontFamily: mainFont.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: Padding(
@@ -45,8 +41,10 @@ class PrintLessonState extends State<PrintLesson> {
           children: <Widget>[
             Text(
               "Printing is easy peasy",
-              style: GoogleFonts.comicNeue(
-                  textStyle: TextStyle(fontWeight: FontWeight.w600)),
+              style: TextStyle(
+                fontFamily: mainFont.fontFamily,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

@@ -1,17 +1,17 @@
 import 'dart:math';
-
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:test_project/api/prefs_helper.dart';
+import 'package:test_project/commons/constants.dart';
 
 AppBar lessonAppBar(context, Stopwatch stopwatch, String title) {
-  final mainColor = const Color.fromARGB(255, 252, 221, 253);
-
   return AppBar(
     backgroundColor: mainColor,
     leading: IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(
+        Icons.arrow_back,
+        color: textColor,
+      ),
       onPressed: () {
         PrefsHelper().timeElapsedInLesson = (PrefsHelper().timeElapsedInLesson +
                 (stopwatch.elapsedMilliseconds) / 1000)
@@ -24,13 +24,16 @@ AppBar lessonAppBar(context, Stopwatch stopwatch, String title) {
     actions: [
       IconButton(
         icon: const Icon(Icons.menu),
+        color: textColor,
         onPressed: () {},
       ),
     ],
     title: Text(
       title,
-      style: GoogleFonts.comicNeue(
-        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+      style: TextStyle(
+        color: textColor,
+        fontFamily: mainFont.fontFamily,
+        fontWeight: FontWeight.w600,
       ),
     ),
   );
@@ -44,13 +47,7 @@ Widget confetti(ConfettiController controllerCenter) {
       blastDirectionality: BlastDirectionality
           .explosive, // don't specify a direction, blast randomly
       shouldLoop: false, // start again as soon as the animation is finished
-      colors: const [
-        Color.fromARGB(255, 255, 208, 252),
-        Color.fromARGB(255, 255, 175, 250),
-        Color.fromARGB(255, 255, 139, 247),
-        Color.fromARGB(255, 255, 68, 243),
-        Color.fromARGB(255, 255, 30, 240),
-      ], // manually specify the colors to be used
+      colors: confettiColors,
       numberOfParticles: 20,
       maxBlastForce: 40,
       createParticlePath: drawCircle,
@@ -75,4 +72,130 @@ Path drawCircle(Size size) {
   }
   path.close();
   return path;
+}
+
+void incorrectAnswerPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      Future.delayed(const Duration(milliseconds: 600), () {
+        Navigator.of(context).pop(true);
+      });
+
+      return Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: mainColor,
+            ),
+            padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+            child: Text(
+              'Try again!',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                fontFamily: mainFont.fontFamily,
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showCorrectDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      Future.delayed(const Duration(milliseconds: 600), () {
+        Navigator.of(context).pop(true);
+      });
+      return Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: mainColor,
+            ),
+            padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+            child: Text(
+              'Correct!',
+              style: TextStyle(
+                fontFamily: mainFont.fontFamily,
+                color: Colors.black,
+                fontSize: 18,
+                decoration: TextDecoration.none,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+InputDecoration submitDecoration(String hintText) {
+  return InputDecoration(
+    icon: ClipRRect(
+      borderRadius: BorderRadius.circular(50),
+      child: Material(
+        child: InkWell(
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Icon(
+              Icons.arrow_circle_right_outlined,
+              color: arrowColor,
+            ),
+          ),
+          onTap: () {},
+        ),
+      ),
+    ),
+    hintText: hintText,
+    labelText: '',
+    enabledBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: arrowColor,
+      ),
+    ),
+    focusedBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: arrowColor,
+      ),
+    ),
+  );
+}
+
+Widget doneButton(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      TextButton.icon(
+        label: Text(
+          "Done!", //  ₊˚⊹♡",
+          style: TextStyle(
+            fontFamily: mainFont.fontFamily,
+            fontWeight: FontWeight.w800,
+            height: 5,
+            color: arrowColor,
+          ),
+        ),
+        icon: const Icon(
+          Icons.arrow_circle_right_outlined,
+          color: arrowColor,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ],
+  );
 }

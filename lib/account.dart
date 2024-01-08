@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_project/api/prefs_helper.dart';
 import 'package:test_project/commons/commons.dart';
+import 'package:test_project/commons/constants.dart';
+import 'package:test_project/commons/permissions_service.dart';
+import 'package:test_project/commons/service_locator.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -15,11 +18,11 @@ class Account extends StatefulWidget {
 }
 
 class AccountState extends State<Account> {
-  final mainFont = GoogleFonts.comicNeue();
-  final mainColor = const Color.fromARGB(255, 252, 221, 253);
   final TextEditingController _textEditingController1 = TextEditingController();
   final formKey1 = GlobalKey<FormState>();
   late ConfettiController _controllerCenter; // CONFETTI! :D
+
+  final _permissionService = getIt<PermissionService>();
 
   @override
   void initState() {
@@ -40,10 +43,7 @@ class AccountState extends State<Account> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 253, 207, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ],
+          colors: gradientColors,
           begin: Alignment.topCenter,
           end: Alignment.center,
         ),
@@ -52,10 +52,18 @@ class AccountState extends State<Account> {
   }
 
   CircleAvatar userIcon(height) {
+    String userImage = 'assets/pink_snake.jpg'; // for testing
+    // userImage = 'assets/elmo_on_fire.png';
     return CircleAvatar(
-      backgroundImage: const AssetImage(
-          'assets/elmo_on_fire.png'), // TODO: allow user to get image
-      radius: height / 10,
+      radius: height / 9,
+      child: CircleAvatar(
+        backgroundImage: AssetImage(userImage), // TODO: allow user to get image
+        radius: height / 10,
+
+        onBackgroundImageError: (exception, stackTrace) {
+          userImage = 'assets/pink_snake.jpg';
+        },
+      ),
     );
   }
 
@@ -226,19 +234,21 @@ class AccountState extends State<Account> {
         children: <Widget>[
           Text(
             header,
-            style: GoogleFonts.comicNeue(
-              fontSize: 18.0,
+            style: TextStyle(
+              fontFamily: mainFont.fontFamily,
               fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
           ),
           const SizedBox(
             height: 8.0,
           ),
           Text(
-            '$value',
-            style: GoogleFonts.comicNeue(
-              fontSize: 14.0,
+            value,
+            style: TextStyle(
+              fontFamily: mainFont.fontFamily,
               fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
           )
         ],
@@ -265,8 +275,9 @@ class AccountState extends State<Account> {
             ),
             Text(
               data,
-              style: GoogleFonts.comicNeue(
-                fontSize: 18.0,
+              style: TextStyle(
+                fontFamily: mainFont.fontFamily,
+                fontSize: 18,
               ),
             )
           ],
@@ -353,6 +364,21 @@ class AccountState extends State<Account> {
                           padding: EdgeInsets.only(top: height / 20),
                           child: Column(
                             children: <Widget>[
+                              // TODO: BADGES
+                              // Progress bar
+                              // you against chat gpt
+                              // fix what chat gpt wrote " give me a problem in python to fix"
+                              // paragon levels (over leveling) --> once you're done with the levels level up with the chat gpt
+                              // Dark mode with different colors
+                              // Sections completed (not levels) Separate chatgpt stuff for levels
+                              // Pink snake logo --> python wrapped around computer with hats you can earn
+                              // snake computer has a little 'help'
+                              // snake eating the exterminator bug
+                              // 'flame' for one year
+                              // 'Exterminator' and 'fix my code'
+                              //
+                              // name the snake --> print? py? print coding? loop? oop? Oop! Learn to Code, Oroborus, GIL, hash, idle, immutable, lisssssssssssst, lisst, lysst, lambda,
+                              // code powered, carnivores, slither,
                               infoChild(width / 3, Icons.email, 'email'),
                               infoChild(width / 3, Icons.call, 'phone number'),
                             ],
@@ -361,12 +387,12 @@ class AccountState extends State<Account> {
                       ],
                     ),
                   ),
-                  confetti(_controllerCenter),
                 ],
               ),
             ],
           ),
         ),
+        confetti(_controllerCenter),
       ],
     );
   }

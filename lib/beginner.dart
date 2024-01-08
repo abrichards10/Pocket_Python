@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:test_project/comments_lesson.dart';
+import 'package:test_project/commons/constants.dart';
 import 'package:test_project/print_lesson.dart';
 
 class Beginner extends StatefulWidget {
@@ -12,12 +13,8 @@ class Beginner extends StatefulWidget {
 }
 
 class BeginnerState extends State<Beginner> {
-  final mainFont = GoogleFonts.comicNeue();
-  final mainColor = const Color.fromARGB(255, 252, 221, 253);
-
   @override
   void initState() {
-    print("${NavigationHistoryObserver().top}");
     super.initState();
   }
 
@@ -33,9 +30,17 @@ class BeginnerState extends State<Beginner> {
         ),
         title: Text(
           "Beginner",
-          style: GoogleFonts.comicNeue(
-              textStyle: const TextStyle(fontWeight: FontWeight.w600)),
+          style: TextStyle(
+            fontFamily: mainFont.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {},
+          ),
+        ],
         backgroundColor: mainColor,
       ),
       body: Center(
@@ -46,7 +51,7 @@ class BeginnerState extends State<Beginner> {
               child: Card(
                 elevation: 3,
                 shadowColor: const Color(0xffFCD4FF),
-                color: const Color.fromARGB(255, 254, 235, 255),
+                color: cardColor,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -54,9 +59,10 @@ class BeginnerState extends State<Beginner> {
                       leading: const Icon(Icons.tag),
                       title: Text(
                         'Comments',
-                        style: GoogleFonts.comicNeue(
-                            textStyle:
-                                const TextStyle(fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                          fontFamily: mainFont.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       subtitle: Text('Code that does (almost) nothing',
                           style: mainFont),
@@ -76,7 +82,7 @@ class BeginnerState extends State<Beginner> {
               child: Card(
                 elevation: 3,
                 shadowColor: const Color(0xffFCD4FF),
-                color: const Color.fromARGB(255, 254, 235, 255),
+                color: cardColor,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -84,9 +90,10 @@ class BeginnerState extends State<Beginner> {
                       leading: const Icon(Icons.create),
                       title: Text(
                         'Print!',
-                        style: GoogleFonts.comicNeue(
-                            textStyle:
-                                const TextStyle(fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                          fontFamily: mainFont.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       subtitle:
                           Text('How to print to console', style: mainFont),

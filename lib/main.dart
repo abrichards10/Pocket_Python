@@ -3,11 +3,13 @@ import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:test_project/api/api_service.dart';
 import 'package:test_project/api/prefs.dart';
 import 'package:test_project/bloc/main/lesson_bloc.dart';
+import 'package:test_project/commons/service_locator.dart';
 import 'package:test_project/home.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupServiceLocator();
   await Prefs.init();
   runApp(const MyApp());
 }

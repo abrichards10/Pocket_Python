@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:test_project/commons/constants.dart';
 
 class Advanced extends StatefulWidget {
   const Advanced({super.key});
@@ -9,9 +9,6 @@ class Advanced extends StatefulWidget {
 }
 
 class AdvancedState extends State<Advanced> {
-  final mainFont = GoogleFonts.comicNeue();
-  final mainColor = const Color.fromARGB(255, 252, 221, 253);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +21,8 @@ class AdvancedState extends State<Advanced> {
         ),
         title: Text(
           "Advanced",
-          style: GoogleFonts.comicNeue(
-              textStyle: const TextStyle(fontWeight: FontWeight.w600)),
+          style: TextStyle(
+              fontFamily: mainFont.fontFamily, fontWeight: FontWeight.w600),
         ),
         backgroundColor: mainColor,
       ),
