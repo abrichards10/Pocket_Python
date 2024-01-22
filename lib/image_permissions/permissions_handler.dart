@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:test_project/commons/app_alert_dialog.dart';
-import 'package:test_project/commons/permissions_service.dart';
+import 'package:test_project/image_permissions/app_alert_dialog.dart';
+import 'package:test_project/image_permissions/permissions_service.dart';
 
 class PermissionHandlerPermissionService implements PermissionService {
   @override

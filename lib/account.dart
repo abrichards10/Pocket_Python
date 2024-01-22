@@ -1,14 +1,19 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:io';
 
 import 'package:confetti/confetti.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:test_project/api/prefs_helper.dart';
 import 'package:test_project/commons/commons.dart';
 import 'package:test_project/commons/constants.dart';
-import 'package:test_project/commons/permissions_service.dart';
-import 'package:test_project/commons/service_locator.dart';
+import 'package:test_project/image_permissions/image_picker_action_sheet.dart';
+import 'package:test_project/image_permissions/media_service.dart';
+import 'package:test_project/image_permissions/permissions_service.dart';
+import 'package:test_project/image_permissions/service_locator.dart';
+import 'dart:math' as math;
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -17,15 +22,39 @@ class Account extends StatefulWidget {
   State<Account> createState() => AccountState();
 }
 
-class AccountState extends State<Account> {
+class AccountState extends State<Account> with SingleTickerProviderStateMixin {
   final TextEditingController _textEditingController1 = TextEditingController();
   final formKey1 = GlobalKey<FormState>();
   late ConfettiController _controllerCenter; // CONFETTI! :D
 
-  final _permissionService = getIt<PermissionService>();
+  final _mediaService = getIt<MediaServiceInterface>;
+  final _permissionService = getIt<PermissionService>;
+
+  final MediaService _mediaServiceClass = MediaService();
+
+  File? imageFile;
+  bool _isLoadingGettingImage = false;
+
+  late AnimationController _controller;
+  final _tween = IntTween(begin: 0, end: 360);
+
+  late Animation<int> _animation;
 
   @override
   void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )..addListener(
+        () {
+          setState(() {});
+        },
+      );
+
+    _animation = _tween.animate(_controller);
+
+    _controller.repeat();
+
     _textEditingController1.text = PrefsHelper().accountName;
     _controllerCenter = ConfettiController(
       duration: const Duration(seconds: 1),
@@ -35,13 +64,39 @@ class AccountState extends State<Account> {
 
   @override
   void dispose() {
+    _controller.dispose();
     _controllerCenter.dispose(); // Dispose of confetti
     super.dispose();
   }
 
+  Offset _getOffset(int angle, int distance) {
+    return Offset.fromDirection(math.pi / 180 * angle, distance.toDouble());
+  }
+
+  Future<AppImageSource?> _pickImageSource() async {
+    AppImageSource? appImageSource = await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => ImagePickerActionSheet(),
+    );
+    if (appImageSource != null) {
+      _getImage(appImageSource);
+    }
+  }
+
+  Future _getImage(AppImageSource appImageSource) async {
+    setState(() => _isLoadingGettingImage = true);
+    final pickedImageFile =
+        await _mediaServiceClass.uploadImage(context, appImageSource);
+    setState(() => _isLoadingGettingImage = false);
+
+    if (pickedImageFile != null) {
+      setState(() => imageFile = pickedImageFile);
+    }
+  }
+
   Widget gradientDecor() {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: gradientColors,
           begin: Alignment.topCenter,
@@ -51,23 +106,42 @@ class AccountState extends State<Account> {
     );
   }
 
-  CircleAvatar userIcon(height) {
-    String userImage = 'assets/pink_snake.jpg'; // for testing
+  Widget userIcon(height) {
+    ImageProvider<Object> userImage = AssetImage(snek);
     // userImage = 'assets/elmo_on_fire.png';
-    return CircleAvatar(
-      radius: height / 9,
-      child: CircleAvatar(
-        backgroundImage: AssetImage(userImage), // TODO: allow user to get image
-        radius: height / 10,
+    // return AvatarContainer(
+    //   isLoading: _isLoadingGettingImage,
+    //   onTap: _pickImageSource,
+    //   imageFile: imageFile,
+    // );
 
-        onBackgroundImageError: (exception, stackTrace) {
-          userImage = 'assets/pink_snake.jpg';
-        },
+    return GestureDetector(
+      onTap: () {
+        _pickImageSource();
+      },
+      child: CircleAvatar(
+        backgroundColor: floatingCircleColors[2],
+        radius: height / 9,
+        child: CircleAvatar(
+          backgroundColor: floatingCircleColors[2],
+          backgroundImage:
+              imageFile == null ? userImage : FileImage(imageFile!),
+          // TODO: allow user to get image
+          radius: height / 10,
+
+          // onBackgroundImageError: (exception, stackTrace) {
+          //   userImage = 'assets/pink_snake.jpg';
+          // },
+        ),
       ),
     );
   }
 
   Form userName() {
+    if (PrefsHelper().accountName == "Name" ||
+        PrefsHelper().accountName == "") {
+      _textEditingController1.text = "Name";
+    }
     return Form(
       key: formKey1,
       child: Column(
@@ -80,6 +154,7 @@ class AccountState extends State<Account> {
                 _textEditingController1.text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: textColor,
                   fontFamily: mainFont.fontFamily,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -97,17 +172,29 @@ class AccountState extends State<Account> {
                       70,
                       MediaQuery.of(context).size.height / 2.5,
                     ),
+                    color: backgroundColor,
                     child: SizedBox(
                       width: 250,
                       child: TextField(
                         controller: _textEditingController1,
-                        style: mainFont,
+                        style: TextStyle(
+                          fontFamily: mainFont.fontFamily,
+                          color: textColor,
+                        ),
                         autofocus: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Name",
                           labelText: 'Who are you?',
                           contentPadding: EdgeInsets.all(20),
+                          hintStyle: TextStyle(
+                            color: textColor,
+                            fontFamily: mainFont.fontFamily,
+                          ),
+                          labelStyle: TextStyle(
+                            color: textColor,
+                            fontFamily: mainFont.fontFamily,
+                          ),
                         ),
                         maxLength: 30,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
@@ -135,7 +222,7 @@ class AccountState extends State<Account> {
     String label = " seconds";
 
     if (time >= 2592000) {
-      int months = (time / 2592000).round();
+      int months = (time / 2592000).floor();
       int days = ((time / 86400) - (months * 30)).round();
       time = months;
       String monthLabel = "month";
@@ -161,9 +248,9 @@ class AccountState extends State<Account> {
     }
 
     if (time >= 86400) {
-      int days = (time / 86400).round();
+      int days = (time / 86400).floor();
       int hours = ((time / 3600) - (days * 24)).round();
-      time = days;
+      time = days.round();
       String dayLabel = "day";
       String hourLabel = "hour";
 
@@ -187,9 +274,10 @@ class AccountState extends State<Account> {
     }
 
     if (time >= 3600) {
-      int hours = (time / 3600).round();
+      int hours = (time / 3600).floor();
       int minutes = ((time / 60) - (hours * 60)).round();
-      time = hours;
+
+      time = hours.round();
       String hourLabel = "hour";
       String minuteLabel = "minute";
 
@@ -238,6 +326,7 @@ class AccountState extends State<Account> {
               fontFamily: mainFont.fontFamily,
               fontWeight: FontWeight.bold,
               fontSize: 18,
+              color: textColor,
             ),
           ),
           const SizedBox(
@@ -249,6 +338,7 @@ class AccountState extends State<Account> {
               fontFamily: mainFont.fontFamily,
               fontWeight: FontWeight.bold,
               fontSize: 14,
+              color: textColor,
             ),
           )
         ],
@@ -267,7 +357,7 @@ class AccountState extends State<Account> {
             ),
             Icon(
               icon,
-              color: Color.fromARGB(255, 232, 136, 235),
+              color: accountPicColor,
               size: 36.0,
             ),
             SizedBox(
@@ -283,7 +373,7 @@ class AccountState extends State<Account> {
           ],
         ),
         onTap: () {
-          print('Info Object selected');
+          // print('Info Object selected');
         },
       ),
     );
@@ -300,7 +390,10 @@ class AccountState extends State<Account> {
         Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: Icon(
+                Icons.arrow_back,
+                color: textColor,
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -312,6 +405,65 @@ class AccountState extends State<Account> {
             children: [
               Stack(
                 children: <Widget>[
+                  Positioned(
+                    top: _getOffset(_animation.value, 100).dy + 200,
+                    left: _getOffset(_animation.value, 200).dx + 200,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(20),
+                        backgroundColor:
+                            floatingCircleColors[1], // <-- Button color
+                      ),
+                      child:
+                          Icon(Icons.nat, color: Colors.transparent, size: .1),
+                    ),
+                  ),
+                  Positioned(
+                    top: _getOffset(_animation.value, 100).dy + 100,
+                    right: _getOffset(_animation.value, 200).dx + 100,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(20),
+                        backgroundColor:
+                            floatingCircleColors[2], // <-- Button color
+                      ),
+                      child:
+                          Icon(Icons.nat, color: Colors.transparent, size: 40),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: _getOffset(_animation.value, 120).dy + 200,
+                    right: _getOffset(_animation.value, 100).dx + 200,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(20),
+                        backgroundColor:
+                            floatingCircleColors[0], // <-- Button color
+                      ),
+                      child: Icon(Icons.nat, color: Colors.transparent),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: _getOffset(_animation.value, 100).dy + 100,
+                    left: _getOffset(_animation.value, 250).dx + 100,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(20),
+                        backgroundColor:
+                            floatingCircleColors[1], // <-- Button color
+                      ),
+                      child:
+                          Icon(Icons.nat, color: Colors.transparent, size: 70),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
@@ -339,13 +491,15 @@ class AccountState extends State<Account> {
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Color.fromARGB(255, 254, 235, 255),
-                            boxShadow: [
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20)),
+                            color: accountDarkColor,
+                            boxShadow: const [
                               BoxShadow(
-                                  color: Colors.black45,
-                                  blurRadius: 2.0,
-                                  offset: Offset(0.0, 2.0))
+                                color: Colors.black45,
+                                blurRadius: 2.0,
+                                offset: Offset(0.0, 2.0),
+                              )
                             ],
                           ),
                           child: Padding(
@@ -353,17 +507,47 @@ class AccountState extends State<Account> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                headerChild('Level', "114"),
+                                headerChild(
+                                  'Level',
+                                  "114",
+                                ),
                                 // headerChild('Skills', "1205"),
-                                headerChild('ⴵ Time Spent', timeSpent()),
+                                headerChild(
+                                  'ⴵ Time Spent',
+                                  timeSpent(),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: height / 20),
+                          padding: EdgeInsets.only(top: 10, bottom: 100),
                           child: Column(
                             children: <Widget>[
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: accountDarkColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black45,
+                                      blurRadius: 2.0,
+                                      offset: Offset(0.0, 2.0),
+                                    )
+                                  ],
+                                ),
+                                height: 150,
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  "HELLO",
+                                  style: TextStyle(
+                                    fontFamily: mainFont.fontFamily,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
+
                               // TODO: BADGES
                               // Progress bar
                               // you against chat gpt
@@ -379,8 +563,9 @@ class AccountState extends State<Account> {
                               //
                               // name the snake --> print? py? print coding? loop? oop? Oop! Learn to Code, Oroborus, GIL, hash, idle, immutable, lisssssssssssst, lisst, lysst, lambda,
                               // code powered, carnivores, slither,
-                              infoChild(width / 3, Icons.email, 'email'),
-                              infoChild(width / 3, Icons.call, 'phone number'),
+                              // Leaderboards
+                              // infoChild(width / 3, Icons.email, 'email'),
+                              // infoChild(width / 3, Icons.call, 'phone number'),
                             ],
                           ),
                         )

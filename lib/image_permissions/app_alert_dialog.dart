@@ -6,6 +6,7 @@ class AppAlertDialog extends StatelessWidget {
   final String subtitle;
 
   const AppAlertDialog({
+    super.key,
     required this.onConfirm,
     required this.title,
     required this.subtitle,

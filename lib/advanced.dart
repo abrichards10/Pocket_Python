@@ -14,7 +14,10 @@ class AdvancedState extends State<Advanced> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: textColor,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -22,10 +25,14 @@ class AdvancedState extends State<Advanced> {
         title: Text(
           "Advanced",
           style: TextStyle(
-              fontFamily: mainFont.fontFamily, fontWeight: FontWeight.w600),
+            fontFamily: mainFont.fontFamily,
+            fontWeight: FontWeight.w600,
+            color: textColor,
+          ),
         ),
         backgroundColor: mainColor,
       ),
+      backgroundColor: backgroundColor,
     );
   }
 }

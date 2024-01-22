@@ -1,17 +1,20 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:test_project/account.dart';
 import 'package:test_project/advanced.dart';
+import 'package:test_project/api/my_keys.dart';
 import 'package:test_project/beginner.dart';
+import 'package:test_project/commons/commons.dart';
 import 'package:test_project/commons/constants.dart';
 import 'package:test_project/expert.dart';
 import 'package:test_project/intermediate.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+  });
 
   final String title;
 
@@ -20,12 +23,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // NEXT LESSON
-  // Progress
+  // List<Widget> colorIcons = <Widget>[
+  //   Icon(
+  //     Icons.sunny,
+  //     color: textColor,
+  //   ),
+  //   Icon(
+  //     Icons.ac_unit,
+  //     color: textColor,
+  //   ),
+  // ];
+
+  final List<bool> selectedWeather = <bool>[false, true];
 
   @override
   void initState() {
-    print("${NavigationHistoryObserver().top}");
     super.initState();
   }
 
@@ -38,59 +50,153 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  menuButton(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        Icons.menu,
+        color: textColor,
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+              // You need this, notice the parameters below:
+              builder: (BuildContext context, StateSetter innerSetState) {
+                return AlertDialog(
+                  backgroundColor: cardColor,
+                  content: SizedBox(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Dark Mode',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: mainFont.fontFamily,
+                            color: textColor,
+                          ),
+                        ),
+                        ToggleButtons(
+                          onPressed: (int index) {
+                            setState(
+                              () {
+                                if (index == 0) {
+                                  setDarkModeColors(false);
+                                  setState(() {});
+                                } else if (index == 1) {
+                                  setDarkModeColors(true);
+                                  setState(() {});
+                                }
+                                // The button that is tapped is set to true, and the others to false.
+                                for (int i = 0;
+                                    i < selectedWeather.length;
+                                    i++) {
+                                  selectedWeather[i] = i == index;
+                                }
+                              },
+                            );
+                            innerSetState(
+                              () {},
+                            );
+                            setState(() {});
+                          },
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          selectedBorderColor: textColor,
+                          selectedColor: selectedColor,
+                          fillColor: mainColor,
+                          color: cardColor,
+                          isSelected: selectedWeather,
+                          children: [
+                            Icon(
+                              Icons.sunny,
+                              color: textColor,
+                            ),
+                            Icon(
+                              Icons.ac_unit,
+                              color: textColor,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
         leading: IconButton(
-          icon: const Icon(Icons.account_box),
+          icon: Icon(
+            Icons.account_box,
+            color: textColor,
+          ),
           onPressed: () {
             Navigator.of(context).push(_createRoute());
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {},
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.local_fire_department,
+          //     color: textColor,
+          //   ),
+          //   onPressed: () {
+          //     Navigator.of(context).push(_createRoute());
+          //   },
+          // ),
+          Row(
+            children: [
+              // GestureDetector(
+              //   child: Container(
+              //     padding: EdgeInsets.all(10),
+              //     alignment: Alignment.centerLeft,
+              //     height: MediaQuery.of(context).size.width / 4,
+              //     child: Image(
+              //       image: AssetImage(snek),
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     print(chatGPTAPI("Answer the following question only with yes or no: Is this a valid python print statement?  "));
+              //   },
+              // ),
+              menuButton(context),
+            ],
           ),
         ],
         title: Text(
           widget.title,
           style: TextStyle(
+            color: textColor,
             fontFamily: mainFont.fontFamily,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
+      backgroundColor: backgroundColor,
       body: Center(
         child: ListView(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: <Widget>[
             GestureDetector(
-              child: Card(
-                elevation: 3,
-                shadowColor: const Color(0xffFCD4FF),
-                color: cardColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.power_settings_new),
-                      title: Text(
-                        'Beginner',
-                        style: TextStyle(
-                          fontFamily: mainFont.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Start here if you don\'t know how to print',
-                        style: mainFont,
-                      ),
-                    ),
-                  ],
-                ),
+              child: topicCard(
+                'Beginner',
+                'Start here if you don\'t know how to print',
+                Icons.power_settings_new,
+                0,
+                context,
               ),
               onTap: () {
                 Navigator.push(
@@ -100,27 +206,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             GestureDetector(
-              child: Card(
-                elevation: 3,
-                shadowColor: const Color(0xffFCD4FF),
-                color: cardColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.power_sharp),
-                      title: Text(
-                        'Intermediate',
-                        style: TextStyle(
-                          fontFamily: mainFont.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text('Wanna know what a \'for loop\' is?',
-                          style: mainFont),
-                    ),
-                  ],
-                ),
+              child: topicCard(
+                'Intermediate',
+                'Wanna know what a \'for loop\' is?',
+                Icons.power_sharp,
+                0,
+                context,
               ),
               onTap: () {
                 Navigator.push(
@@ -130,27 +221,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             GestureDetector(
-              child: Card(
-                elevation: 3,
-                shadowColor: const Color(0xffFCD4FF),
-                color: cardColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.bug_report),
-                      title: Text(
-                        'Advanced',
-                        style: TextStyle(
-                          fontFamily: mainFont.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text('Functions and Recurrsion, oh dear!',
-                          style: mainFont),
-                    ),
-                  ],
-                ),
+              child: topicCard(
+                'Advanced',
+                'Functions and Recurrsion, oh dear!',
+                Icons.bug_report,
+                0,
+                context,
               ),
               onTap: () {
                 Navigator.push(
@@ -160,27 +236,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             GestureDetector(
-              child: Card(
-                elevation: 3,
-                shadowColor: const Color(0xffFCD4FF),
-                color: cardColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.precision_manufacturing),
-                      title: Text(
-                        'Expert',
-                        style: TextStyle(
-                          fontFamily: mainFont.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text('Algorithms and Data Structures, oh my!',
-                          style: mainFont),
-                    ),
-                  ],
-                ),
+              child: topicCard(
+                'Expert',
+                'Algorithms and Data Structures, oh my!',
+                Icons.precision_manufacturing,
+                0,
+                context,
               ),
               onTap: () {
                 Navigator.push(
@@ -191,26 +252,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             // TODO: Lock this
             GestureDetector(
-              child: Card(
-                elevation: 3,
-                shadowColor: const Color(0xffFCD4FF),
-                color: cardColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.coffee),
-                      title: Text(
-                        'Legend',
-                        style: TextStyle(
-                          fontFamily: mainFont.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: Text('If you know you know', style: mainFont),
-                    ),
-                  ],
-                ),
+              child: topicCard(
+                'Legend',
+                'If you know you know',
+                Icons.coffee,
+                0,
+                context,
               ),
               onTap: () {
                 Navigator.push(
@@ -219,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -231,6 +278,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: MediaQuery.of(context).size.width / 3.5,
                     child: Card(
                       elevation: 3,
+                      color: cardColor,
+                      shadowColor: shadowColor,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
@@ -239,13 +288,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             style: TextStyle(
                               fontFamily: mainFont.fontFamily,
                               fontWeight: FontWeight.w600,
+                              color: textColor,
                               height: 3,
                             ),
                           ),
                         ],
                       ),
-                      color: cardColor,
-                      shadowColor: const Color(0xffFCD4FF),
                     ),
                   ),
                 ),

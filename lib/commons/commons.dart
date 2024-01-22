@@ -4,11 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:test_project/api/prefs_helper.dart';
 import 'package:test_project/commons/constants.dart';
 
-AppBar lessonAppBar(context, Stopwatch stopwatch, String title) {
+Text explanationText(String theText, BuildContext context) {
+  return Text(
+    theText,
+    style: TextStyle(
+      color: textColor,
+      fontFamily: codeFont.fontFamily,
+      fontSize: MediaQuery.of(context).size.width / 24,
+    ),
+  );
+}
+
+AppBar lessonAppBar(BuildContext context, Stopwatch stopwatch, String title) {
   return AppBar(
     backgroundColor: mainColor,
     leading: IconButton(
-      icon: const Icon(
+      icon: Icon(
         Icons.arrow_back,
         color: textColor,
       ),
@@ -21,13 +32,6 @@ AppBar lessonAppBar(context, Stopwatch stopwatch, String title) {
         Navigator.pop(context);
       },
     ),
-    actions: [
-      IconButton(
-        icon: const Icon(Icons.menu),
-        color: textColor,
-        onPressed: () {},
-      ),
-    ],
     title: Text(
       title,
       style: TextStyle(
@@ -94,7 +98,7 @@ void incorrectAnswerPopup(BuildContext context) {
             child: Text(
               'Try again!',
               style: TextStyle(
-                color: Colors.black,
+                color: textColor,
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
                 fontFamily: mainFont.fontFamily,
@@ -128,7 +132,7 @@ void showCorrectDialog(BuildContext context) {
               'Correct!',
               style: TextStyle(
                 fontFamily: mainFont.fontFamily,
-                color: Colors.black,
+                color: textColor,
                 fontSize: 18,
                 decoration: TextDecoration.none,
                 fontWeight: FontWeight.w500,
@@ -146,9 +150,10 @@ InputDecoration submitDecoration(String hintText) {
     icon: ClipRRect(
       borderRadius: BorderRadius.circular(50),
       child: Material(
+        color: backgroundColor,
         child: InkWell(
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: Icon(
               Icons.arrow_circle_right_outlined,
               color: arrowColor,
@@ -159,13 +164,17 @@ InputDecoration submitDecoration(String hintText) {
       ),
     ),
     hintText: hintText,
+    hintStyle: TextStyle(
+      fontFamily: mainFont.fontFamily,
+      color: textColor,
+    ),
     labelText: '',
-    enabledBorder: const UnderlineInputBorder(
+    enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(
         color: arrowColor,
       ),
     ),
-    focusedBorder: const UnderlineInputBorder(
+    focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(
         color: arrowColor,
       ),
@@ -173,14 +182,14 @@ InputDecoration submitDecoration(String hintText) {
   );
 }
 
-Widget doneButton(BuildContext context) {
+Widget doneButton(BuildContext context, Stopwatch stopwatch) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       TextButton.icon(
         label: Text(
-          "Done!", //  ₊˚⊹♡",
+          "Done! ₊˚⊹", //  ₊˚⊹♡",
           style: TextStyle(
             fontFamily: mainFont.fontFamily,
             fontWeight: FontWeight.w800,
@@ -188,13 +197,76 @@ Widget doneButton(BuildContext context) {
             color: arrowColor,
           ),
         ),
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_circle_right_outlined,
           color: arrowColor,
         ),
         onPressed: () {
+          PrefsHelper().timeElapsedInLesson =
+              (PrefsHelper().timeElapsedInLesson +
+                      (stopwatch.elapsedMilliseconds) / 1000)
+                  .ceil();
+          print("${PrefsHelper().timeElapsedInLesson}");
           Navigator.pop(context);
         },
+      ),
+    ],
+  );
+}
+
+topicCard(String title, String description, IconData icon, double progress,
+    BuildContext context) {
+  return Stack(
+    children: [
+      Card(
+        elevation: 3,
+        shadowColor: shadowColor,
+        color: cardColor,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(
+                icon,
+                color: textColor,
+              ),
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontFamily: mainFont.fontFamily,
+                  color: textColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                description,
+                style: TextStyle(
+                  fontFamily: mainFont.fontFamily,
+                  color: textColor,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 6,
+                  // margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
+                    color: progressColor,
+                  ),
+                  width: progress > 0
+                      ? (progress * MediaQuery.of(context).size.width) - 50
+                      : 0,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     ],
   );

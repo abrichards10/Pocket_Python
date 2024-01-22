@@ -41,9 +41,12 @@ dependencies:
   navigation_history_observer: ^1.1.0
   get_it: ^7.6.6
   flutter_image_compress: ^2.1.0
-  path_provider: ^2.1.1
+  path_provider: ^2.1.2
   permission_handler: ^11.0.1
   image_picker: ^1.0.6
+  camera: ^0.10.5+9
+  path: ^1.8.3
+  random_avatar: ^0.0.8
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +73,8 @@ flutter:
   assets:
     - assets/elmo_on_fire.png
     - assets/pink_snake.jpg
+    - assets/Snek.png
+    - assets/SnekDark.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
