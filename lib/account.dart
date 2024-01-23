@@ -2,17 +2,16 @@
 
 import 'dart:io';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:random_avatar/random_avatar.dart';
 import 'package:test_project/api/prefs_helper.dart';
 import 'package:test_project/commons/commons.dart';
 import 'package:test_project/commons/constants.dart';
-import 'package:test_project/image_permissions/image_picker_action_sheet.dart';
 import 'package:test_project/image_permissions/media_service.dart';
-import 'package:test_project/image_permissions/permissions_service.dart';
-import 'package:test_project/image_permissions/service_locator.dart';
 import 'dart:math' as math;
 
 class Account extends StatefulWidget {
@@ -27,9 +26,6 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
   final formKey1 = GlobalKey<FormState>();
   late ConfettiController _controllerCenter; // CONFETTI! :D
 
-  final _mediaService = getIt<MediaServiceInterface>;
-  final _permissionService = getIt<PermissionService>;
-
   final MediaService _mediaServiceClass = MediaService();
 
   File? imageFile;
@@ -39,6 +35,21 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
   final _tween = IntTween(begin: 0, end: 360);
 
   late Animation<int> _animation;
+
+  final TextEditingController _assetController = TextEditingController();
+
+  ImageProvider<Object> userImage = AssetImage(snek);
+
+  bool showAvg = false;
+
+  var averageTime = (PrefsHelper().timeElapsedMonday +
+          PrefsHelper().timeElapsedTuesday +
+          PrefsHelper().timeElapsedWednesday +
+          PrefsHelper().timeElapsedThursday +
+          PrefsHelper().timeElapsedFriday +
+          PrefsHelper().timeElapsedSaturday +
+          PrefsHelper().timeElapsedSunday) /
+      7;
 
   @override
   void initState() {
@@ -52,7 +63,6 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
       );
 
     _animation = _tween.animate(_controller);
-
     _controller.repeat();
 
     _textEditingController1.text = PrefsHelper().accountName;
@@ -64,6 +74,7 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _assetController.dispose();
     _controller.dispose();
     _controllerCenter.dispose(); // Dispose of confetti
     super.dispose();
@@ -76,9 +87,132 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
   Future<AppImageSource?> _pickImageSource() async {
     AppImageSource? appImageSource = await showCupertinoModalPopup(
       context: context,
-      builder: (BuildContext context) => ImagePickerActionSheet(),
+      builder: (BuildContext context) => CupertinoActionSheet(
+        actions: <Widget>[
+          Container(
+            color: cardColor,
+            child: CupertinoActionSheetAction(
+              child: Text(
+                'Create Character ₊˚⊹',
+                style: TextStyle(color: textColor),
+              ),
+              onPressed: () {
+                showDialog<void>(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: cardColor,
+                      insetPadding:
+                          EdgeInsets.symmetric(horizontal: 90, vertical: 120),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Randomize!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: mainFont.fontFamily,
+                                  color: textColor,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                FloatingActionButton(
+                                  backgroundColor: cardColor,
+                                  onPressed: () {
+                                    String svg = RandomAvatarString(
+                                      DateTime.now().toIso8601String(),
+                                      trBackground: true,
+                                    );
+                                    painters.clear();
+
+                                    painters.add(
+                                      RandomAvatar(
+                                        DateTime.now().toIso8601String(),
+                                        height: 130,
+                                        width: 132,
+                                      ),
+                                    );
+                                    _assetController.text = svg;
+                                    setState(() {});
+                                  },
+                                  tooltip: 'Generate',
+                                  child: Icon(
+                                    Icons.gesture,
+                                    color: textColor,
+                                  ),
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    'Approve ✓',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: mainFont.fontFamily,
+                                      color: textColor,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    PrefsHelper().randomImageChosen = true;
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Container(
+            color: cardColor,
+            child: CupertinoActionSheetAction(
+              child: Text(
+                'Take Photo',
+                style: TextStyle(color: textColor),
+              ),
+              onPressed: () => Navigator.of(context).pop(AppImageSource.camera),
+            ),
+          ),
+          Container(
+            color: cardColor,
+            child: CupertinoActionSheetAction(
+              child: Text(
+                'Upload From Gallery',
+                style: TextStyle(color: textColor),
+              ),
+              onPressed: () =>
+                  Navigator.of(context).pop(AppImageSource.gallery),
+            ),
+          ),
+        ],
+        cancelButton: Container(
+          color: cardColor,
+          child: CupertinoActionSheetAction(
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: textColor),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ),
     );
     if (appImageSource != null) {
+      PrefsHelper().randomImageChosen = false;
       _getImage(appImageSource);
     }
   }
@@ -107,14 +241,6 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
   }
 
   Widget userIcon(height) {
-    ImageProvider<Object> userImage = AssetImage(snek);
-    // userImage = 'assets/elmo_on_fire.png';
-    // return AvatarContainer(
-    //   isLoading: _isLoadingGettingImage,
-    //   onTap: _pickImageSource,
-    //   imageFile: imageFile,
-    // );
-
     return GestureDetector(
       onTap: () {
         _pickImageSource();
@@ -122,17 +248,14 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
       child: CircleAvatar(
         backgroundColor: floatingCircleColors[2],
         radius: height / 9,
-        child: CircleAvatar(
-          backgroundColor: floatingCircleColors[2],
-          backgroundImage:
-              imageFile == null ? userImage : FileImage(imageFile!),
-          // TODO: allow user to get image
-          radius: height / 10,
-
-          // onBackgroundImageError: (exception, stackTrace) {
-          //   userImage = 'assets/pink_snake.jpg';
-          // },
-        ),
+        child: (PrefsHelper().randomImageChosen && painters.isNotEmpty)
+            ? painters[0]
+            : CircleAvatar(
+                backgroundColor: floatingCircleColors[2],
+                backgroundImage:
+                    imageFile == null ? userImage : FileImage(imageFile!),
+                radius: height / 10,
+              ),
       ),
     );
   }
@@ -398,7 +521,7 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
                 Navigator.pop(context);
               },
             ),
-            backgroundColor: mainColor,
+            backgroundColor: Colors.transparent,
           ),
           backgroundColor: Colors.transparent,
           body: ListView(
@@ -539,12 +662,97 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
                                 ),
                                 height: 150,
                                 width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  "HELLO",
-                                  style: TextStyle(
-                                    fontFamily: mainFont.fontFamily,
-                                    color: textColor,
-                                  ),
+                                child: Stack(
+                                  children: <Widget>[
+                                    AspectRatio(
+                                      aspectRatio: 1.99,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 0,
+                                          left: 10,
+                                          top: 24,
+                                          bottom: 12,
+                                        ),
+                                        child: LineChart(
+                                          showAvg
+                                              ? totalData([
+                                                  ColorTween(
+                                                    begin: mapGradientColors[0],
+                                                    end: mapGradientColors[1],
+                                                  ).lerp(0.2)!.withOpacity(0.1),
+                                                  ColorTween(
+                                                    begin: mapGradientColors[0],
+                                                    end: mapGradientColors[1],
+                                                  ).lerp(0.2)!.withOpacity(0.1),
+                                                ], [
+                                                  ColorTween(
+                                                          begin:
+                                                              mapGradientColors[
+                                                                  0],
+                                                          end:
+                                                              mapGradientColors[
+                                                                  1])
+                                                      .lerp(0.2)!,
+                                                  ColorTween(
+                                                          begin:
+                                                              mapGradientColors[
+                                                                  0],
+                                                          end:
+                                                              mapGradientColors[
+                                                                  1])
+                                                      .lerp(0.2)!,
+                                                ],
+                                                  averageTime,
+                                                  averageTime,
+                                                  averageTime,
+                                                  averageTime,
+                                                  averageTime,
+                                                  averageTime,
+                                                  averageTime)
+                                              : totalData(
+                                                  mapGradientColors
+                                                      .map((color) => color
+                                                          .withOpacity(0.3))
+                                                      .toList(),
+                                                  mapGradientColors,
+                                                  PrefsHelper()
+                                                      .timeElapsedMonday,
+                                                  PrefsHelper()
+                                                      .timeElapsedTuesday,
+                                                  PrefsHelper()
+                                                      .timeElapsedWednesday,
+                                                  PrefsHelper()
+                                                      .timeElapsedThursday,
+                                                  PrefsHelper()
+                                                      .timeElapsedFriday,
+                                                  PrefsHelper()
+                                                      .timeElapsedSaturday,
+                                                  PrefsHelper()
+                                                      .timeElapsedSunday,
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(right: 10),
+                                      alignment: Alignment.topRight,
+                                      child: SizedBox(
+                                        width: 34,
+                                        height: 34,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.bubble_chart,
+                                            color: confettiColors[2],
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showAvg = !showAvg;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
 
@@ -578,6 +786,179 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
           ),
         ),
         confetti(_controllerCenter),
+      ],
+    );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    var style = TextStyle(
+      fontFamily: mainFont.fontFamily,
+      fontWeight: FontWeight.bold,
+      color: textColor,
+      fontSize: 12,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = 'Mon';
+        break;
+      case 1:
+        text = 'Tue';
+        break;
+      case 2:
+        text = 'Wed';
+        break;
+      case 3:
+        text = 'Thu';
+        break;
+      case 4:
+        text = 'Fri';
+        break;
+      case 5:
+        text = 'Sat';
+        break;
+      case 6:
+        text = 'Sun';
+        break;
+      default:
+        text = '';
+        break;
+    }
+
+    return Text(
+      text,
+      style: style,
+      textAlign: TextAlign.left,
+    );
+  }
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    var style = TextStyle(
+      fontFamily: mainFont.fontFamily,
+      fontWeight: FontWeight.bold,
+      color: textColor,
+      fontSize: 12,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = '0';
+        break;
+      case 30:
+        text = '30';
+        break;
+      case 60:
+        text = '60';
+        break;
+      default:
+        return Container();
+    }
+
+    return Text(
+      text,
+      style: style,
+      textAlign: TextAlign.left,
+    );
+  }
+
+  LineChartData totalData(
+    theseMapColors,
+    linearGradientColors,
+    monTime,
+    tueTime,
+    wedTime,
+    thuTime,
+    friTime,
+    satTime,
+    sunTime,
+  ) {
+    return LineChartData(
+      lineTouchData: const LineTouchData(enabled: false),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: false,
+        verticalInterval: 1,
+        horizontalInterval: 1,
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: mainColor,
+            strokeWidth: 1,
+          );
+        },
+        // getDrawingHorizontalLine: (value) {
+        //   return FlLine(
+        //     strokeWidth: 1,
+        //     gradient: LinearGradient(
+        //       begin: Alignment.topLeft,
+        //       end: Alignment(0.8, 1),
+        //       colors: floatingCircleColors,
+        //     ),
+        //   );
+        // },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 20,
+            getTitlesWidget: bottomTitleWidgets,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: leftTitleWidgets,
+            reservedSize: 20,
+            interval: 1,
+          ),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      minX: 0,
+      maxX: 6,
+      minY: 0,
+      maxY: 60,
+      lineBarsData: [
+        LineChartBarData(
+          spots: [
+            FlSpot(0, monTime),
+            FlSpot(1, tueTime),
+            FlSpot(2, wedTime),
+            FlSpot(3, thuTime),
+            FlSpot(4, friTime),
+            FlSpot(5, satTime),
+            FlSpot(6, sunTime),
+          ],
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: linearGradientColors,
+          ),
+          barWidth: 4,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: true,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: theseMapColors,
+            ),
+          ),
+        ),
       ],
     );
   }

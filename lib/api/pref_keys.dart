@@ -15,6 +15,17 @@ class PrefKeys {
       'numberOfPrintActivitiesDone';
   static const String kCurrentPrintScroll = 'currentCommentScroll';
 
+  // TIME STUFF
   static const String kTimeElapsed = 'timeElapsed';
+  static const String kTimeMonday = 'timeMonday';
+  static const String kTimeTuesday = 'timeTuesday';
+  static const String kTimeWednesday = 'timeWednesday';
+  static const String kTimeThursday = 'timeThursday';
+  static const String kTimeFriday = 'timeFriday';
+  static const String kTimeSaturday = 'timeSaturday';
+  static const String kTimeSunday = 'timeSunday';
+
   static const String kAccountName = 'accountName';
+  static const String kAccountPicture = 'accountPicture';
+  static const String krandomImageChosen = 'randomImageChosen';
 }

@@ -169,7 +169,7 @@ class CommentsLessonState extends State<CommentsLesson> {
             ),
           ],
         ),
-        _correctAnswer ? showNextButton(220) : Container(),
+        _correctAnswer ? showNextButton(240) : Container(),
       ],
     );
   }

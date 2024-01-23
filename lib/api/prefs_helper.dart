@@ -34,7 +34,23 @@ class PrefsHelper {
       Prefs.getDouble(PrefKeys.kCurrentPrintScroll) ?? 0.0;
 
   String get accountName => Prefs.getString(PrefKeys.kAccountName) ?? "";
+
+  // TIME STUFF
   int get timeElapsedInLesson => Prefs.getInt(PrefKeys.kTimeElapsed) ?? 0;
+  double get timeElapsedMonday => Prefs.getDouble(PrefKeys.kTimeMonday) ?? 0.0;
+  double get timeElapsedTuesday =>
+      Prefs.getDouble(PrefKeys.kTimeTuesday) ?? 0.0;
+  double get timeElapsedWednesday =>
+      Prefs.getDouble(PrefKeys.kTimeWednesday) ?? 0.0;
+  double get timeElapsedThursday =>
+      Prefs.getDouble(PrefKeys.kTimeThursday) ?? 0.0;
+  double get timeElapsedFriday => Prefs.getDouble(PrefKeys.kTimeFriday) ?? 0.0;
+  double get timeElapsedSaturday =>
+      Prefs.getDouble(PrefKeys.kTimeSaturday) ?? 0.0;
+  double get timeElapsedSunday => Prefs.getDouble(PrefKeys.kTimeSunday) ?? 0.0;
+
+  bool get randomImageChosen =>
+      Prefs.getBool(PrefKeys.krandomImageChosen) ?? false;
 
   /* SETTERS */
 
@@ -61,8 +77,27 @@ class PrefsHelper {
   set currentPrintScroll(double value) =>
       Prefs.setDouble(PrefKeys.kCurrentPrintScroll, value);
 
-  set accountName(String value) =>
-      Prefs.setString(PrefKeys.kAccountName, value);
+  // TIME STUFF
   set timeElapsedInLesson(int value) =>
       Prefs.setInt(PrefKeys.kTimeElapsed, value);
+  set timeElapsedMonday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeMonday, value);
+  set timeElapsedTuesday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeTuesday, value);
+  set timeElapsedWednesday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeWednesday, value);
+  set timeElapsedThursday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeThursday, value);
+  set timeElapsedFriday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeFriday, value);
+  set timeElapsedSaturday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeSaturday, value);
+  set timeElapsedSunday(double value) =>
+      Prefs.setDouble(PrefKeys.kTimeSunday, value);
+
+  set accountName(String value) =>
+      Prefs.setString(PrefKeys.kAccountName, value);
+
+  set randomImageChosen(bool value) =>
+      Prefs.setBool(PrefKeys.krandomImageChosen, value);
 }

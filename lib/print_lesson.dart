@@ -177,24 +177,31 @@ class PrintLessonState extends State<PrintLesson> {
     );
   }
 
-  _printDescription(String description) {
+  _printDescription(String description, extra) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          40, MediaQuery.of(context).size.height / 2, 40, 0),
+          40, MediaQuery.of(context).size.height / 2, 40, 150),
       child: Container(
+        alignment: Alignment.center,
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(40)),
           color: cardColor,
         ),
-        child: Text(
-          description,
-          style: TextStyle(
-              fontFamily: mainFont.fontFamily,
-              color: textColor,
-              fontSize: 18,
-              decoration: TextDecoration.none,
-              fontWeight: FontWeight.w300),
+        child: Column(
+          children: [
+            Text(
+              description,
+              style: TextStyle(
+                fontFamily: mainFont.fontFamily,
+                color: textColor,
+                fontSize: 18,
+                decoration: TextDecoration.none,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            extra
+          ],
         ),
       ),
     );
@@ -229,11 +236,7 @@ class PrintLessonState extends State<PrintLesson> {
             ),
           ],
         ),
-        _correctAnswer2
-            ? doneButton(context, _stopwatch)
-            : (_correctAnswer1 || _correctAnswer2
-                ? showNextButton(200)
-                : Container()),
+        _correctAnswer1 ? showNextButton(220) : Container(),
       ],
     );
   }
@@ -253,10 +256,12 @@ class PrintLessonState extends State<PrintLesson> {
         ),
         _correctAnswer1
             ? _printDescription(
-                "Output: \nA print statement looks like this! \n\nPrinting results in an output to console, so we can see what's going on")
+                "Output: \nA print statement looks like this! \n\nPrinting results in an output to console, so we can see what's going on",
+                Container())
             : Container(),
         _correctAnswer2
-            ? _printDescription("Output: \nPrint multiple things...like this!")
+            ? _printDescription("Output: \nPrint multiple things...like this!",
+                doneButton(context, _stopwatch))
             : Container(),
         confetti(_controllerCenter),
       ],

@@ -73,7 +73,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
@@ -84,6 +84,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 633b813fca24f1de5e076bcd7f720c038b23892b
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
 
-PODFILE CHECKSUM: e398137015c2db6823457feb354cdafe29471481
+PODFILE CHECKSUM: d3a2d7329515aeba3a283178da9d9b9adbe8287d
 
 COCOAPODS: 1.12.1

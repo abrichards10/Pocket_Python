@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 // final mainFont = GoogleFonts.comicNeue();
 
 String snek = "assets/Snek.png";
+final List<Widget> painters = <Widget>[];
 
 final mainFont = GoogleFonts.abel();
 final codeFont = GoogleFonts.ptMono();
@@ -24,6 +25,8 @@ List<Color> gradientColors = [
   Color.fromARGB(255, 253, 207, 255),
   Color.fromARGB(255, 255, 255, 255),
 ];
+
+List<Color> mapGradientColors = [cardColor, arrowColor];
 
 List<Color> confettiColors = [
   Color.fromARGB(255, 221, 208, 255),
@@ -59,6 +62,8 @@ setDarkModeColors(bool isDarkMode) {
       Color(0xff1C1C1E),
     ];
 
+    mapGradientColors = [cardColor, arrowColor];
+
     confettiColors = [
       Color.fromARGB(255, 210, 208, 255),
       Color.fromARGB(255, 178, 175, 255),
@@ -66,6 +71,7 @@ setDarkModeColors(bool isDarkMode) {
       Color.fromARGB(255, 74, 68, 255),
       Color.fromARGB(255, 30, 34, 255),
     ];
+
     floatingCircleColors = [
       Color.fromARGB(255, 93, 92, 114),
       Color.fromARGB(255, 70, 69, 99),
@@ -107,5 +113,7 @@ setDarkModeColors(bool isDarkMode) {
       Color.fromARGB(255, 255, 68, 243),
       Color.fromARGB(255, 255, 30, 240),
     ];
+
+    mapGradientColors = [cardColor, arrowColor];
   }
 }

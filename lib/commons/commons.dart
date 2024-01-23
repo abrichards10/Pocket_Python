@@ -28,6 +28,8 @@ AppBar lessonAppBar(BuildContext context, Stopwatch stopwatch, String title) {
                 (stopwatch.elapsedMilliseconds) / 1000)
             .ceil();
 
+        getDayMinutes(stopwatch);
+
         print("${PrefsHelper().timeElapsedInLesson}");
         Navigator.pop(context);
       },
@@ -205,13 +207,66 @@ Widget doneButton(BuildContext context, Stopwatch stopwatch) {
           PrefsHelper().timeElapsedInLesson =
               (PrefsHelper().timeElapsedInLesson +
                       (stopwatch.elapsedMilliseconds) / 1000)
-                  .ceil();
+                  .round();
+
+          getDayMinutes(stopwatch);
+
           print("${PrefsHelper().timeElapsedInLesson}");
           Navigator.pop(context);
         },
       ),
     ],
   );
+}
+
+getDayMinutes(Stopwatch stopwatch) {
+  switch (DateTime.now().weekday) {
+    case 1:
+      PrefsHelper().timeElapsedMonday = (PrefsHelper().timeElapsedMonday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 2:
+      PrefsHelper().timeElapsedTuesday = (PrefsHelper().timeElapsedTuesday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 3:
+      PrefsHelper().timeElapsedWednesday = (PrefsHelper().timeElapsedWednesday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 4:
+      PrefsHelper().timeElapsedThursday = (PrefsHelper().timeElapsedThursday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 5:
+      PrefsHelper().timeElapsedFriday = (PrefsHelper().timeElapsedFriday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 6:
+      PrefsHelper().timeElapsedSaturday = (PrefsHelper().timeElapsedSaturday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    case 7:
+      PrefsHelper().timeElapsedSunday = (PrefsHelper().timeElapsedSunday +
+              (stopwatch.elapsedMilliseconds) / 60000)
+          .round()
+          .toDouble();
+      break;
+    default:
+      // text = '';
+      break;
+  }
 }
 
 topicCard(String title, String description, IconData icon, double progress,
@@ -253,7 +308,7 @@ topicCard(String title, String description, IconData icon, double progress,
                   height: 6,
                   // margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(40),
                       bottomRight: Radius.circular(40),
                     ),

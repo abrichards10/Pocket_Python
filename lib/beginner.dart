@@ -61,7 +61,8 @@ class BeginnerState extends State<Beginner> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CommentsLesson()),
+                    builder: (context) => const CommentsLesson(),
+                  ),
                 );
               },
             ),
@@ -76,7 +77,9 @@ class BeginnerState extends State<Beginner> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PrintLesson()),
+                  MaterialPageRoute(
+                    builder: (context) => const PrintLesson(),
+                  ),
                 );
               },
             ),
