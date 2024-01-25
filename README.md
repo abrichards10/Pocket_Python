@@ -16,11 +16,13 @@ An app that helps you solve small python problems quickly and easily! Need a pyt
   
 
 
+A|B
+--|--
+![]([https://example.com/a.gif](https://github.com/abrichards10/Pocket_Python/assets/54547597/33f11493-a34f-4807-b276-5de1fe5d50ec))|![](
+https://github.com/abrichards10/Pocket_Python/assets/54547597/f25a7116-a635-4174-92e0-f78c1374b116)
 
 
-https://github.com/abrichards10/Pocket_Python/assets/54547597/33f11493-a34f-4807-b276-5de1fe5d50ec
 
-https://github.com/abrichards10/Pocket_Python/assets/54547597/f25a7116-a635-4174-92e0-f78c1374b116
 
 
 
