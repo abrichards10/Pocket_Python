@@ -11,6 +11,6 @@ An app that helps you solve small python problems quickly and easily! Need a pyt
 ## Features
 
 - Levels that range from Beginner to Expert
-- An Account Feature to store your data
-- A button that allows tyou to continue right back to your previous lesson
+- A customizable ccount Feature to store your data 
 - Most importantly, Confetti!
+  
