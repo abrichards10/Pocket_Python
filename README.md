@@ -14,3 +14,7 @@ An app that helps you solve small python problems quickly and easily! Need a pyt
 - A customizable ccount Feature to store your data 
 - Most importantly, Confetti!
   
+
+
+https://github.com/abrichards10/Pocket_Python/assets/54547597/9f7640ba-a080-4414-a469-a83427b7c9d0
+
