@@ -847,8 +847,8 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
       case 30:
         text = '30';
         break;
-      case 60:
-        text = '60';
+      case 240:
+        text = '240';
         break;
       default:
         return Container();
@@ -931,7 +931,7 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
       minX: 0,
       maxX: 6,
       minY: 0,
-      maxY: 60,
+      maxY: 240,
       lineBarsData: [
         LineChartBarData(
           spots: [

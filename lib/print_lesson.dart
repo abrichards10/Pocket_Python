@@ -21,12 +21,15 @@ class PrintLessonState extends State<PrintLesson> {
   ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController1 = TextEditingController();
   final TextEditingController _textEditingController2 = TextEditingController();
+  final TextEditingController _textEditingController3 = TextEditingController();
 
   final _formKey1 = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
+  final _formKey3 = GlobalKey<FormState>();
 
   bool _correctAnswer1 = false;
   bool _correctAnswer2 = false;
+  bool _correctAnswer3 = false;
   final _stopwatch = Stopwatch(); // keep track of time spent on lesson
 
   @override
@@ -34,6 +37,7 @@ class PrintLessonState extends State<PrintLesson> {
     _stopwatch.start();
     _textEditingController1.text = PrefsHelper().print1;
     _textEditingController2.text = PrefsHelper().print2;
+    _textEditingController2.text = PrefsHelper().print3;
 
     _controllerCenter = ConfettiController(
       duration: const Duration(seconds: 1),
@@ -67,14 +71,15 @@ class PrintLessonState extends State<PrintLesson> {
   Widget showNextButton(double thisScroll) {
     return ElevatedButton(
       onPressed: () {
-        PrefsHelper().currentPrintScroll = thisScroll;
         _scrollController.animateTo(
-          PrefsHelper().currentPrintScroll,
+          PrefsHelper().currentPrintScroll + thisScroll,
           curve: Curves.easeIn,
           duration: const Duration(milliseconds: 800),
         );
+        PrefsHelper().currentPrintScroll = thisScroll;
         _correctAnswer1 = false;
         _correctAnswer2 = false;
+        _correctAnswer3 = false;
         setState(() {});
         FocusScope.of(context).unfocus();
       },
@@ -102,7 +107,7 @@ class PrintLessonState extends State<PrintLesson> {
       if (!PrefsHelper().print1AlreadyDone) {
         PrefsHelper().print1AlreadyDone = true;
         PrefsHelper().numberOfPrintActivitiesDone =
-            PrefsHelper().numberOfPrintActivitiesDone + .5;
+            PrefsHelper().numberOfPrintActivitiesDone + 1;
       }
       setState(() {});
     } else {
@@ -121,7 +126,26 @@ class PrintLessonState extends State<PrintLesson> {
       if (!PrefsHelper().print2AlreadyDone) {
         PrefsHelper().print2AlreadyDone = true;
         PrefsHelper().numberOfPrintActivitiesDone =
-            PrefsHelper().numberOfPrintActivitiesDone + .5;
+            PrefsHelper().numberOfPrintActivitiesDone + 1;
+      }
+      setState(() {});
+    } else {
+      incorrectAnswerPopup(context);
+    }
+  }
+
+  printSubmitted3(value) async {
+    PrefsHelper().print3 = value;
+    _textEditingController3.text = value;
+    if (await validatePrint(
+        "Answer the following question only with yes or no: Is this a valid python print statement that specifies a separator? $value")) {
+      _controllerCenter.play(); // Confetti!
+      showCorrectDialog(context);
+      _correctAnswer3 = true;
+      if (!PrefsHelper().print3AlreadyDone) {
+        PrefsHelper().print3AlreadyDone = true;
+        PrefsHelper().numberOfPrintActivitiesDone =
+            PrefsHelper().numberOfPrintActivitiesDone + 1;
       }
       setState(() {});
     } else {
@@ -170,6 +194,31 @@ class PrintLessonState extends State<PrintLesson> {
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             onSubmitted: (value) {
               printSubmitted2(value);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Form printForm3() {
+    return Form(
+      key: _formKey3,
+      child: Column(
+        children: [
+          TextField(
+            controller: _textEditingController3,
+            style: TextStyle(
+              fontFamily: mainFont.fontFamily,
+              color: textColor,
+            ),
+            decoration:
+                submitDecoration("Type a print command with a separator"),
+            autofocus: false,
+            maxLength: 30,
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            onSubmitted: (value) {
+              printSubmitted3(value);
             },
           ),
         ],
@@ -231,12 +280,19 @@ class PrintLessonState extends State<PrintLesson> {
                       "print(\"Print multiple things...\", \"like this!\")",
                       context),
                   printForm2(),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  explanationText(
+                      "print(\"One thing\", \"Another thing\", sep=\"+++\")",
+                      context),
+                  printForm3()
                 ],
               ),
             ),
           ],
         ),
-        _correctAnswer1 ? showNextButton(220) : Container(),
+        _correctAnswer1 || _correctAnswer2 ? showNextButton(220) : Container(),
       ],
     );
   }
@@ -261,6 +317,10 @@ class PrintLessonState extends State<PrintLesson> {
             : Container(),
         _correctAnswer2
             ? _printDescription("Output: \nPrint multiple things...like this!",
+                doneButton(context, _stopwatch))
+            : Container(),
+        _correctAnswer3
+            ? _printDescription("Output: \nOne thing+++Another thing",
                 doneButton(context, _stopwatch))
             : Container(),
         confetti(_controllerCenter),

@@ -7,9 +7,11 @@ class PrefKeys {
 
   static const String kPrint1 = 'print1';
   static const String kPrint2 = 'print2';
+  static const String kPrint3 = 'print3';
 
   static const String kPrint1Done = 'print1Done';
   static const String kPrint2Done = 'print2Done';
+  static const String kPrint3Done = 'print3Done';
 
   static const String kNumberOfPrintActivitiesDone =
       'numberOfPrintActivitiesDone';

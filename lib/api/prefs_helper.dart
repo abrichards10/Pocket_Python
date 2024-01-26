@@ -24,9 +24,11 @@ class PrefsHelper {
   /* PRINT */
   String get print1 => Prefs.getString(PrefKeys.kPrint1) ?? "";
   String get print2 => Prefs.getString(PrefKeys.kPrint2) ?? "";
+  String get print3 => Prefs.getString(PrefKeys.kPrint3) ?? "";
 
   bool get print1AlreadyDone => Prefs.getBool(PrefKeys.kPrint1Done) ?? false;
   bool get print2AlreadyDone => Prefs.getBool(PrefKeys.kPrint2Done) ?? false;
+  bool get print3AlreadyDone => Prefs.getBool(PrefKeys.kPrint3Done) ?? false;
 
   double get numberOfPrintActivitiesDone =>
       Prefs.getDouble(PrefKeys.kNumberOfPrintActivitiesDone) ?? 0.0;
@@ -67,10 +69,12 @@ class PrefsHelper {
   set print1(String value) => Prefs.setString(PrefKeys.kPrint1, value);
   set print1AlreadyDone(bool value) =>
       Prefs.setBool(PrefKeys.kPrint1Done, value);
-
   set print2(String value) => Prefs.setString(PrefKeys.kPrint2, value);
   set print2AlreadyDone(bool value) =>
       Prefs.setBool(PrefKeys.kPrint2Done, value);
+  set print3(String value) => Prefs.setString(PrefKeys.kPrint3, value);
+  set print3AlreadyDone(bool value) =>
+      Prefs.setBool(PrefKeys.kPrint3Done, value);
 
   set numberOfPrintActivitiesDone(double value) =>
       Prefs.setDouble(PrefKeys.kNumberOfPrintActivitiesDone, value);

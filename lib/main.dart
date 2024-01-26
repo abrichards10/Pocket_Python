@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
             ),
           ],
           child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'PocketPython',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: shadowColor),
