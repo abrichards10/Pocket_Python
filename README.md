@@ -15,26 +15,13 @@ An app that helps you solve small python problems quickly and easily! Need a pyt
 - Most importantly, Confetti!
   
 
-<table border="0">
- <tr>
-    <td><b style="font-size:30px">
-      https://example.com/a.gif](https://github.com/abrichards10/Pocket_Python/assets/54547597/33f11493-a34f-4807-b276-5de1fe5d50ec
-    </b></td>
-    <td><b style="font-size:30px">
-      https://github.com/abrichards10/Pocket_Python/assets/54547597/f25a7116-a635-4174-92e0-f78c1374b116
-    </b></td>
- </tr>
- <tr>
-    <td>Lorem ipsum ...</td>
-    <td>Lorem ipsum ...</td>
- </tr>
-</table>
+
+
 
 
 A|B
 --|--
-![](https://example.com/a.gif](https://github.com/abrichards10/Pocket_Python/assets/54547597/33f11493-a34f-4807-b276-5de1fe5d50ec)|![](https://github.com/abrichards10/Pocket_Python/assets/54547597/f25a7116-a635-4174-92e0-f78c1374b116)
-
+![Account Feature](https://github.com/abrichards10/Pocket_Python/assets/54547597/4c37f202-7d47-42cf-997b-55ceab04261a)|![Beginner's Luck](https://github.com/abrichards10/Pocket_Python/assets/54547597/7c579ce4-8c1b-42bf-8d39-e6120d8c501c)
 
 
 
