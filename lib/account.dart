@@ -758,7 +758,7 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
 
                               // TODO: BADGES
                               // Progress bar
-                              // you against chat gpt
+                              // you against chat gpt 
                               // fix what chat gpt wrote " give me a problem in python to fix"
                               // paragon levels (over leveling) --> once you're done with the levels level up with the chat gpt
                               // Dark mode with different colors
@@ -768,12 +768,9 @@ class AccountState extends State<Account> with SingleTickerProviderStateMixin {
                               // snake eating the exterminator bug
                               // 'flame' for one year
                               // 'Exterminator' and 'fix my code'
-                              //
                               // name the snake --> print? py? print coding? loop? oop? Oop! Learn to Code, Oroborus, GIL, hash, idle, immutable, lisssssssssssst, lisst, lysst, lambda,
                               // code powered, carnivores, slither,
                               // Leaderboards
-                              // infoChild(width / 3, Icons.email, 'email'),
-                              // infoChild(width / 3, Icons.call, 'phone number'),
                             ],
                           ),
                         )

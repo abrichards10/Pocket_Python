@@ -8,6 +8,7 @@ String snek = "assets/Snek.png";
 final List<Widget> painters = <Widget>[];
 
 final mainFont = GoogleFonts.abel();
+
 final codeFont = GoogleFonts.ptMono();
 
 var mainColor = Color.fromARGB(255, 252, 221, 253);
