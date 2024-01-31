@@ -37,7 +37,7 @@ class PrintLessonState extends State<PrintLesson> {
     _stopwatch.start();
     _textEditingController1.text = PrefsHelper().print1;
     _textEditingController2.text = PrefsHelper().print2;
-    _textEditingController2.text = PrefsHelper().print3;
+    _textEditingController3.text = PrefsHelper().print3;
 
     _controllerCenter = ConfettiController(
       duration: const Duration(seconds: 1),
@@ -68,15 +68,14 @@ class PrintLessonState extends State<PrintLesson> {
     }
   }
 
-  Widget showNextButton(double thisScroll) {
+  Widget showNextButton() {
     return ElevatedButton(
       onPressed: () {
         _scrollController.animateTo(
-          PrefsHelper().currentPrintScroll + thisScroll,
+          PrefsHelper().currentPrintScroll,
           curve: Curves.easeIn,
           duration: const Duration(milliseconds: 800),
         );
-        PrefsHelper().currentPrintScroll = thisScroll;
         _correctAnswer1 = false;
         _correctAnswer2 = false;
         _correctAnswer3 = false;
@@ -103,6 +102,7 @@ class PrintLessonState extends State<PrintLesson> {
         "Answer the following question only with yes or no: Is this a valid python print statement? $value")) {
       _controllerCenter.play(); // Confetti!
       showCorrectDialog(context);
+      PrefsHelper().currentPrintScroll = 220;
       _correctAnswer1 = true;
       if (!PrefsHelper().print1AlreadyDone) {
         PrefsHelper().print1AlreadyDone = true;
@@ -122,6 +122,7 @@ class PrintLessonState extends State<PrintLesson> {
         "Answer the following question only with yes or no: Is this a valid python print statement for printing more than one object? $value")) {
       _controllerCenter.play(); // Confetti!
       showCorrectDialog(context);
+      PrefsHelper().currentPrintScroll = 460;
       _correctAnswer2 = true;
       if (!PrefsHelper().print2AlreadyDone) {
         PrefsHelper().print2AlreadyDone = true;
@@ -141,6 +142,7 @@ class PrintLessonState extends State<PrintLesson> {
         "Answer the following question only with yes or no: Is this a valid python print statement that specifies a separator? $value")) {
       _controllerCenter.play(); // Confetti!
       showCorrectDialog(context);
+      PrefsHelper().currentPrintScroll = 600;
       _correctAnswer3 = true;
       if (!PrefsHelper().print3AlreadyDone) {
         PrefsHelper().print3AlreadyDone = true;
@@ -226,10 +228,14 @@ class PrintLessonState extends State<PrintLesson> {
     );
   }
 
-  _printDescription(String description, extra) {
+  _printDescription(String description, extraDoneButton) {
     return Padding(
       padding: EdgeInsets.fromLTRB(
-          40, MediaQuery.of(context).size.height / 2, 40, 150),
+        40,
+        MediaQuery.of(context).size.height / 2,
+        40,
+        115,
+      ),
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.all(20),
@@ -249,7 +255,7 @@ class PrintLessonState extends State<PrintLesson> {
                 fontWeight: FontWeight.w300,
               ),
             ),
-            extra
+            extraDoneButton
           ],
         ),
       ),
@@ -292,7 +298,7 @@ class PrintLessonState extends State<PrintLesson> {
             ),
           ],
         ),
-        _correctAnswer1 || _correctAnswer2 ? showNextButton(220) : Container(),
+        _correctAnswer1 || _correctAnswer2 ? showNextButton() : Container(),
       ],
     );
   }
@@ -316,11 +322,13 @@ class PrintLessonState extends State<PrintLesson> {
                 Container())
             : Container(),
         _correctAnswer2
-            ? _printDescription("Output: \nPrint multiple things...like this!",
-                doneButton(context, _stopwatch))
+            ? _printDescription(
+                "Output: \nPrint multiple things...like this!\n\nPretty straightforward dontcha think?",
+                Container())
             : Container(),
         _correctAnswer3
-            ? _printDescription("Output: \nOne thing+++Another thing",
+            ? _printDescription(
+                "Output: \nOne thing+++Another thing\n\nNote: You can use whatever you like for the separator",
                 doneButton(context, _stopwatch))
             : Container(),
         confetti(_controllerCenter),

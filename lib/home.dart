@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/account.dart';
 import 'package:test_project/advanced.dart';
+import 'package:test_project/exterminator.dart';
+import 'package:test_project/help_popup_menu.dart';
 import 'package:test_project/my_keys.dart';
 import 'package:test_project/beginner.dart';
 import 'package:test_project/commons/commons.dart';
@@ -23,16 +25,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // List<Widget> colorIcons = <Widget>[
-  //   Icon(
-  //     Icons.sunny,
-  //     color: textColor,
-  //   ),
-  //   Icon(
-  //     Icons.ac_unit,
-  //     color: textColor,
-  //   ),
-  // ];
+  SampleItem? selectedMenu;
 
   final List<bool> selectedWeather = <bool>[false, true];
 
@@ -44,6 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Route _createRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => const Account(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+    );
+  }
+
+  Route _createRoute1() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const Exterminator(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return child;
       },
@@ -159,19 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // ),
           Row(
             children: [
-              // GestureDetector(
-              //   child: Container(
-              //     padding: EdgeInsets.all(10),
-              //     alignment: Alignment.centerLeft,
-              //     height: MediaQuery.of(context).size.width / 4,
-              //     child: Image(
-              //       image: AssetImage(snek),
-              //     ),
-              //   ),
-              //   onTap: () {
-              //     print(chatGPTAPI("Answer the following question only with yes or no: Is this a valid python print statement?  "));
-              //   },
-              // ),
               menuButton(context),
             ],
           ),
@@ -273,26 +263,99 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  child: SizedBox(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 3.5,
-                    child: Card(
-                      elevation: 3,
-                      color: cardColor,
-                      shadowColor: shadowColor,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Text(
+                  child: Card(
+                    elevation: 3,
+                    color: cardColor,
+                    shadowColor: shadowColor,
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          child: Text(
                             "Exterminator",
                             style: TextStyle(
                               fontFamily: mainFont.fontFamily,
                               fontWeight: FontWeight.w600,
                               color: textColor,
-                              height: 3,
+                              height: 2,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          // alignment: Alignment.centerLeft,
+                          width: MediaQuery.of(context).size.width / 4,
+
+                          child: Image(
+                            image: AssetImage(bug),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(_createRoute1());
+                  },
+                ),
+                GestureDetector(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    height: MediaQuery.of(context).size.width / 4,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                      ),
+                      child: PopupMenuButton<SampleItem>(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20.0),
+                          ),
+                        ),
+                        offset: Offset(-60, -40),
+                        color: cardColor,
+                        elevation: 3,
+                        initialValue: selectedMenu,
+                        onSelected: (SampleItem item) {
+                          setState(() {
+                            selectedMenu = item;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text("Instructions"),
+                                      Text("Instructions"),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<SampleItem>>[
+                          PopupMenuItem<SampleItem>(
+                            value: SampleItem.itemOne,
+                            child: Text(
+                              'Need help?',
+                              style: TextStyle(
+                                fontFamily: mainFont.fontFamily,
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
+                        child: Image(
+                          image: AssetImage(snek),
+                        ),
                       ),
                     ),
                   ),

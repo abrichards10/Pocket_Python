@@ -50,10 +50,9 @@ class CommentsLessonState extends State<CommentsLesson> {
     }
   }
 
-  Widget showNextButton(double thisScroll) {
+  Widget showNextButton() {
     return ElevatedButton(
       onPressed: () {
-        PrefsHelper().currentCommentScroll = thisScroll;
         _scrollController.animateTo(
           PrefsHelper().currentCommentScroll,
           curve: Curves.easeIn,
@@ -83,6 +82,7 @@ class CommentsLessonState extends State<CommentsLesson> {
       _controllerCenter.play(); // Confetti!
       showCorrectDialog(context);
       _correctAnswer = true;
+      PrefsHelper().currentCommentScroll = 600;
       if (!PrefsHelper().comment1AlreadyDone) {
         PrefsHelper().comment1AlreadyDone = true;
         PrefsHelper().numberOfCommentActivitiesDone =
@@ -169,7 +169,7 @@ class CommentsLessonState extends State<CommentsLesson> {
             ),
           ],
         ),
-        _correctAnswer ? showNextButton(240) : Container(),
+        _correctAnswer ? showNextButton() : Container(),
       ],
     );
   }

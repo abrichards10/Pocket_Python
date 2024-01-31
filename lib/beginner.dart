@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/api/prefs_helper.dart';
-import 'package:test_project/comments_lesson.dart';
+import 'package:test_project/lessons/comments_lesson.dart';
 import 'package:test_project/commons/commons.dart';
 import 'package:test_project/commons/constants.dart';
-import 'package:test_project/print_lesson.dart';
+import 'package:test_project/lessons/print_lesson.dart';
 
 class Beginner extends StatefulWidget {
   const Beginner({super.key});
@@ -54,7 +54,7 @@ class BeginnerState extends State<Beginner> {
                 'Comments',
                 'Code that does (almost) nothing',
                 Icons.tag,
-                PrefsHelper().numberOfCommentActivitiesDone,
+                PrefsHelper().currentCommentScroll,
                 context,
               ),
               onTap: () {
@@ -71,7 +71,7 @@ class BeginnerState extends State<Beginner> {
                 'Print',
                 'How to print to console',
                 Icons.create,
-                PrefsHelper().numberOfPrintActivitiesDone,
+                PrefsHelper().currentPrintScroll,
                 context,
               ),
               onTap: () {

@@ -195,7 +195,7 @@ Widget doneButton(BuildContext context, Stopwatch stopwatch) {
           style: TextStyle(
             fontFamily: mainFont.fontFamily,
             fontWeight: FontWeight.w800,
-            height: 5,
+            height: 3,
             color: arrowColor,
           ),
         ),
@@ -271,6 +271,15 @@ getDayMinutes(Stopwatch stopwatch) {
 
 topicCard(String title, String description, IconData icon, double progress,
     BuildContext context) {
+  print("progress:: $progress");
+
+  if (progress == 600) {
+    progress = MediaQuery.of(context).size.width * .87;
+  } else if (progress == 460) {
+    progress = MediaQuery.of(context).size.width * .5;
+  } else if (progress == 220) {
+    progress = MediaQuery.of(context).size.width * .3;
+  }
   return Stack(
     children: [
       Card(
@@ -314,9 +323,7 @@ topicCard(String title, String description, IconData icon, double progress,
                     ),
                     color: progressColor,
                   ),
-                  width: progress > 0
-                      ? (progress * MediaQuery.of(context).size.width) - 50
-                      : 0,
+                  width: progress,
                 )
               ],
             ),

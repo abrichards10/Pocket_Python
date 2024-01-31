@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 // final mainFont = GoogleFonts.comicNeue();
 
 String snek = "assets/Snek.png";
+String bug = "assets/no_bugs.png";
+
 final List<Widget> painters = <Widget>[];
 
 final mainFont = GoogleFonts.abel();
@@ -21,6 +23,8 @@ var backgroundColor = Colors.white;
 var accountDarkColor = cardColor;
 var progressColor = arrowColor;
 var accountPicColor = Color.fromARGB(255, 246, 198, 248);
+var sendColor = Color.fromARGB(255, 253, 221, 255);
+var receiveColor = Color.fromARGB(255, 255, 236, 247);
 
 List<Color> gradientColors = [
   Color.fromARGB(255, 253, 207, 255),
@@ -48,6 +52,7 @@ List<Color> floatingCircleColors = [
 setDarkModeColors(bool isDarkMode) {
   if (isDarkMode) {
     snek = "assets/SnekDark.png";
+    bug = "assets/no_bugs_dark_mode.png";
     mainColor = Color(0xff000000);
     cardColor = Color(0xff1C1C1E);
     arrowColor = Color.fromARGB(255, 255, 255, 255);
@@ -57,6 +62,8 @@ setDarkModeColors(bool isDarkMode) {
     backgroundColor = Color(0xff2C2C2E);
     accountDarkColor = Color.fromARGB(255, 53, 53, 57);
     accountPicColor = Color.fromARGB(255, 61, 61, 128);
+    sendColor = Color.fromARGB(255, 147, 154, 191);
+    receiveColor = Color.fromARGB(255, 178, 178, 178);
 
     gradientColors = [
       Color(0xff000000),
@@ -82,6 +89,7 @@ setDarkModeColors(bool isDarkMode) {
     ];
   } else {
     snek = "assets/Snek.png";
+    bug = "assets/no_bugs.png";
 
     mainColor = Color.fromARGB(255, 252, 221, 253);
     cardColor = Color.fromARGB(255, 254, 235, 255);
