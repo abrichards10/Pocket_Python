@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:test_project/commons/constants.dart';
 import 'package:test_project/models/message.dart';
-import 'package:test_project/my_keys.dart';
+// import 'package:test_project/my_keys.dart';
 
 class Exterminator extends StatefulWidget {
   const Exterminator({super.key});
@@ -21,67 +21,67 @@ class _ExterminatorState extends State<Exterminator> {
   String prevResponse = "";
   String sentMessage = "";
 
-  void sendMsg(String command, String messageText) async {
-    controller.clear();
-    try {
-      if (command.isNotEmpty) {
-        setState(
-          () {
-            msgs.insert(0, Message(true, messageText));
-            isTyping = true;
-          },
-        );
-        scrollController.animateTo(0.0,
-            duration: const Duration(seconds: 1), curve: Curves.easeOut);
-        var response = await http.post(
-          Uri.parse("https://api.openai.com/v1/chat/completions"),
-          headers: {
-            "Authorization": "Bearer $OpenAiKey",
-            "Content-Type": "application/json"
-          },
-          body: jsonEncode(
-            {
-              "model": "gpt-3.5-turbo",
-              "messages": [
-                {"role": "user", "content": command}
-              ]
-            },
-          ),
-        );
-        if (response.statusCode == 200) {
-          var json = jsonDecode(response.body);
-          setState(
-            () {
-              isTyping = false;
-              msgs.insert(
-                0,
-                Message(
-                  false,
-                  json["choices"][0]["message"]["content"]
-                      .toString()
-                      .trimLeft(),
-                ),
-              );
+  // void sendMsg(String command, String messageText) async {
+  //   controller.clear();
+  //   try {
+  //     if (command.isNotEmpty) {
+  //       setState(
+  //         () {
+  //           msgs.insert(0, Message(true, messageText));
+  //           isTyping = true;
+  //         },
+  //       );
+  //       scrollController.animateTo(0.0,
+  //           duration: const Duration(seconds: 1), curve: Curves.easeOut);
+  //       var response = await http.post(
+  //         Uri.parse("https://api.openai.com/v1/chat/completions"),
+  //         headers: {
+  //           "Authorization": "Bearer $OpenAiKey",
+  //           "Content-Type": "application/json"
+  //         },
+  //         body: jsonEncode(
+  //           {
+  //             "model": "gpt-3.5-turbo",
+  //             "messages": [
+  //               {"role": "user", "content": command}
+  //             ]
+  //           },
+  //         ),
+  //       );
+  //       if (response.statusCode == 200) {
+  //         var json = jsonDecode(response.body);
+  //         setState(
+  //           () {
+  //             isTyping = false;
+  //             msgs.insert(
+  //               0,
+  //               Message(
+  //                 false,
+  //                 json["choices"][0]["message"]["content"]
+  //                     .toString()
+  //                     .trimLeft(),
+  //               ),
+  //             );
 
-              prevResponse = msgs[0].msg;
-              print("PREV RESPONSE: $prevResponse");
-            },
-          );
-          scrollController.animateTo(0.0,
-              duration: const Duration(seconds: 1), curve: Curves.easeOut);
-        }
-      }
-    } on Exception {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-        "Some error occurred, please try again!",
-        style: TextStyle(
-          fontFamily: mainFont.fontFamily,
-          color: textColor,
-        ),
-      )));
-    }
-  }
+  //             prevResponse = msgs[0].msg;
+  //             print("PREV RESPONSE: $prevResponse");
+  //           },
+  //         );
+  //         scrollController.animateTo(0.0,
+  //             duration: const Duration(seconds: 1), curve: Curves.easeOut);
+  //       }
+  //     }
+  //   } on Exception {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text(
+  //       "Some error occurred, please try again!",
+  //       style: TextStyle(
+  //         fontFamily: mainFont.fontFamily,
+  //         color: textColor,
+  //       ),
+  //     )));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +190,7 @@ class _ExterminatorState extends State<Exterminator> {
                               color: textColor,
                             ),
                             onSubmitted: (value) {
-                              sendMsg(value, value);
+                              // sendMsg(value, value);
                               sentMessage = value;
                             },
                             textInputAction: TextInputAction.send,
@@ -211,7 +211,7 @@ class _ExterminatorState extends State<Exterminator> {
                   ),
                   InkWell(
                     onTap: () {
-                      sendMsg(sentMessage, sentMessage); // TODO: Change
+                      // sendMsg(sentMessage, sentMessage); // TODO: Change
                     },
                     child: Container(
                       height: screenWidth * .1,
@@ -257,10 +257,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "Give me an easy practice bug in Python to fix, but don't solve it",
-                            "Gimme something easy",
-                          );
+                          // sendMsg(
+                          //   "Give me an easy practice bug in Python to fix, but don't solve it",
+                          //   "Gimme something easy",
+                          // );
                         },
                       ),
                     ),
@@ -279,10 +279,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "Give me an medium difficulty bug in Python to fix, but don't solve it",
-                            "Gimme something normal",
-                          );
+                          // sendMsg(
+                          //   "Give me an medium difficulty bug in Python to fix, but don't solve it",
+                          //   "Gimme something normal",
+                          // );
                         },
                       ),
                     ),
@@ -301,10 +301,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "Give me a hard bug in Python to fix, but don't solve it",
-                            "Gimme a hard question",
-                          );
+                          // sendMsg(
+                          //   "Give me a hard bug in Python to fix, but don't solve it",
+                          //   "Gimme a hard question",
+                          // );
                         },
                       ),
                     ),
@@ -323,10 +323,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "Give me a super hard python coding question to solve, but don't solve it for me",
-                            "I want to be a legend",
-                          );
+                          // sendMsg(
+                          //   "Give me a super hard python coding question to solve, but don't solve it for me",
+                          //   "I want to be a legend",
+                          // );
                         },
                       ),
                     ),
@@ -358,10 +358,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "Give me a fun python coding fact!",
-                            "Fun fact?!",
-                          );
+                          // sendMsg(
+                          //   "Give me a fun python coding fact!",
+                          //   "Fun fact?!",
+                          // );
                         },
                       ),
                     ),
@@ -380,10 +380,10 @@ class _ExterminatorState extends State<Exterminator> {
                           ),
                         ),
                         onTap: () {
-                          sendMsg(
-                            "I give up trying to fix the bug, please tell me the answer to this previous question: $prevResponse",
-                            "Help! I can't figure it out :(",
-                          );
+                          // sendMsg(
+                          //   "I give up trying to fix the bug, please tell me the answer to this previous question: $prevResponse",
+                          //   "Help! I can't figure it out :(",
+                          // );
                         },
                       ),
                     ),
